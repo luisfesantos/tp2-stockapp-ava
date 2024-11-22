@@ -16,6 +16,8 @@ namespace StockApp.Infra.Data.Context
         //sqlservericoma.database.windows.net
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
