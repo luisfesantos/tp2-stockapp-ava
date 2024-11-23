@@ -1,11 +1,8 @@
+using StockApp.Domain.Interfaces;
+
 namespace StockApp.Domain.Test
 {
-    public class UnitTest1
+    public class ProductControllerTests
     {
-        [Fact]
-        public void Test1()
-        {
-
-        }
     }
 }
