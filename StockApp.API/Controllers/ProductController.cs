@@ -9,15 +9,9 @@ namespace StockApp.API.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IReviewRepository _reviewRepository;
-
-        public ProductController(IReviewRepository reviewRepository)
-        {
-            _reviewRepository = reviewRepository;
-        }
 
         [HttpPost("{productId}/review")]
-        public async Task<IActionResult> AddReview(int productId, [FromBody] Review review)
+        public async Task<IActionResult> AddReview(int productId, [FromBody] Review review, [FromServices] IReviewRepository reviewRepository)
         {
             if (!ModelState.IsValid)
             {
@@ -29,7 +23,7 @@ namespace StockApp.API.Controllers
 
             try
             {
-                await _reviewRepository.AddAsync(review);
+                await reviewRepository.AddAsync(review);
                 return Ok(new { message = "Review added successfully." });
             }
             catch (Exception ex)
@@ -39,14 +33,14 @@ namespace StockApp.API.Controllers
         }
 
         [HttpPost("{productId}/review/update")]
-        public async Task<IActionResult> AddOrUpdateReview(int productId, [FromBody] Review review)
+        public async Task<IActionResult> AddOrUpdateReview(int productId, [FromBody] Review review, [FromServices] IReviewRepository reviewRepository)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingReview = await _reviewRepository.GetByUserAndProductAsync(review.UserId, productId);
+            var existingReview = await reviewRepository.GetByUserAndProductAsync(review.UserId, productId);
 
             if (existingReview != null)
             {
@@ -55,7 +49,7 @@ namespace StockApp.API.Controllers
                 existingReview.Comment = review.Comment;
                 existingReview.Date = DateTime.UtcNow;
 
-                await _reviewRepository.UpdateAsync(existingReview);
+                await reviewRepository.UpdateAsync(existingReview);
                 return Ok(new { message = "Review updated successfully." });
             }
             else
@@ -64,9 +58,37 @@ namespace StockApp.API.Controllers
                 review.ProductId = productId;
                 review.Date = DateTime.UtcNow;
 
-                await _reviewRepository.AddAsync(review);
+                await reviewRepository.AddAsync(review);
                 return Ok(new { message = "Review added successfully." });
             }
         }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Product>>> Search(
+        [FromServices] IProductRepository productRepository,
+        [FromQuery] string? query,
+        [FromQuery] string? sortBy = "Name",
+        [FromQuery] bool descending = false,
+        [FromQuery] decimal? minPrice = null,
+        [FromQuery] decimal? maxPrice = null)
+        {
+            if (minPrice.HasValue && maxPrice.HasValue && minPrice > maxPrice)
+            {
+                return BadRequest("O preço mínimo não pode ser maior que o preço máximo.");
+            }
+            var filters = new ProductFilters
+            {
+                Query = query,
+                SortBy = sortBy,
+                Descending = descending,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice
+            };
+
+            var products = await productRepository.SearchAsync(filters);
+
+            return Ok(products);
+        }
+
     }
 }

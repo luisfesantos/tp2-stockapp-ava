@@ -11,6 +11,8 @@ namespace StockApp.Domain.Interfaces
     {
         Task<IEnumerable<Product>> GetProducts();
 
+        Task<IEnumerable<Product>> SearchAsync(ProductFilters filters);
+
         Task<Product> GetById(int? id);
         Task<Product> Create(Product product);
         Task<Product> Update(Product product);

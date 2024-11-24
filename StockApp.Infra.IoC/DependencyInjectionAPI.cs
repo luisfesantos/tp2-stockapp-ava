@@ -27,7 +27,6 @@ namespace StockApp.Infra.IoC
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
 
-
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
 
             var myhandlers = AppDomain.CurrentDomain.Load("StockApp.Application");
