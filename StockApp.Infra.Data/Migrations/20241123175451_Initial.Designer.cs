@@ -12,7 +12,7 @@ using StockApp.Infra.Data.Context;
 namespace StockApp.Infra.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241122162151_Initial")]
+    [Migration("20241123175451_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
