@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace StockApp.Domain.Interfaces
 {
-    public interface IReviewRepository
+    public interface ICartRepository
     {
-        Task AddAsync(Review review);
-        Task<Review> GetByUserAndProductAsync(string userId, int productId);
-        Task UpdateAsync(Review review);
+        Task<Cart> GetCartAsync(int? cartId);
+        Task AddToCartAsync(int? cartId, CartItem item);
     }
-
 }
