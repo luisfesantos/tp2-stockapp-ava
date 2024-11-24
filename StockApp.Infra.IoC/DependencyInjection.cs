@@ -34,10 +34,12 @@ namespace StockApp.Infra.IoC
                 .AddDefaultTokenProviders();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<ICartRepository, CartRepository>();
 
 
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
